@@ -112,7 +112,7 @@ class TraceConverter:
         mkey = np.zeros((total_amount, key_len), dtype=np.uint8)
         mplaintext = np.zeros((total_amount, plaintext_len), dtype=np.uint8)
         mcihper = np.zeros((len(self.__output_buff), ciphertext_len), dtype=np.uint8)
-        mtrace = np.zeros((total_amount, trace_len), dtype=np.float)
+        mtrace = np.zeros((total_amount, trace_len), dtype=np.float32)
         mlabel = np.zeros((total_amount), dtype=np.uint8)
 
         record_num = 0
