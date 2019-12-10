@@ -157,7 +157,7 @@ class ResultPlotter:
                 in_file['Profiling_traces/metadata'], in_file['Attack_traces/metadata'])
 
     # Check a saved model against one of the ASCAD databases Attack traces
-    def check_model(self, model_file, ascad_database, legend: str, num_traces=2000):  # 2000
+    def check_model(self, model_file, ascad_database, num_traces=2000):  # 2000
         self._check_file_exists(model_file)
         self._check_file_exists(ascad_database)
         # Load profiling and attack data and metadata from the ASCAD database
@@ -171,13 +171,13 @@ class ResultPlotter:
         x = [ranks[i][0] for i in range(0, ranks.shape[0])]
         y = [ranks[i][1] for i in range(0, ranks.shape[0])]
         # print(ranks.shape[0])
-        plt.title('Performance of ' + model_file + ' against ' + ascad_database)
+        plt.title('Performance of ' + os.path.basename(model_file) + '\nagainst ' + ascad_database)
         plt.xlabel('number of traces')
         plt.ylabel('rank')
         plt.grid(True)
-        plt.plot(x, y)
+        plt.plot(x, y, label=os.path.basename(model_file))
         # plt.legend(('cnn_mxf4k11', 'cnn_mxf5k11', 'cnn_mxf6k11', 'cnn_mxf7k11'))
-        plt.legend([legend])
+        plt.legend()
         plt.ylim(0, 255)
         plt.draw()
         # plt.show(block=False)
