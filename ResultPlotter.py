@@ -6,8 +6,6 @@ import matplotlib.pyplot as plt
 from keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 
-labelbyte = 0
-
 # Make tensorflow automatically allocate memory according to runtime requirement
 import tensorflow as tf
 
@@ -17,7 +15,8 @@ tf.keras.backend.set_session(sess)
 
 
 class ResultPlotter:
-    def __init__(self):
+    def __init__(self, target_byte):
+        self.__target_byte = target_byte
         self.AES_Sbox = np.array([
             0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
             0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
@@ -67,7 +66,7 @@ class ResultPlotter:
             # Go back from the class to the key byte. '2' is the index of the byte (third byte) of interest.
             # plaintext = metadata[min_trace_idx + p]['plaintext'][0]
             plaintext = metadata[min_trace_idx + p]['plaintext'][
-                labelbyte]  # plaintext = metadata[min_trace_idx + p]['plaintext'][2]
+                self.__target_byte]  # plaintext = metadata[min_trace_idx + p]['plaintext'][2]
             for i in range(0, 256):
                 # Our candidate key byte probability is the sum of the predictions logs
                 proba = predictions[p][self.AES_Sbox[plaintext ^ i]]
@@ -91,7 +90,7 @@ class ResultPlotter:
     def _full_ranks(self, model, dataset, metadata, min_trace_idx, max_trace_idx, rank_step):
         # Real key byte value that we will use. '2' is the index of the byte (third byte) of interest.
         # real_key = metadata[0]['key'][0]
-        real_key = metadata[0]['key'][labelbyte]  # first byte) of interest.# 2
+        real_key = metadata[0]['key'][self.__target_byte]  # first byte) of interest.# 2
         # Check for overflow
         if max_trace_idx > dataset.shape[0]:
             print(
